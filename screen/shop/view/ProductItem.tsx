@@ -1,8 +1,8 @@
 import React from "react";
-import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Image, StyleSheet, TouchableOpacity, View } from "react-native";
 import { useAppSelector } from "../../../hooks/redux";
 
-import globalStyles from "../../../assets/styles/global";
+import Text from "../../../utils/components/Text";
 
 //Types
 import { ShopScreenProps } from "../../../types/navigation/Shop";
@@ -50,10 +50,10 @@ const styles = (colors: ThemeInterface) =>
       marginHorizontal: "5%",
       paddingVertical: 30,
       paddingHorizontal: "5%",
-      backgroundColor: colors.whiteColor,
+      backgroundColor: colors.cardBackground,
       borderRadius: 10,
       borderWidth: 1,
-      borderColor: "#efefef",
+      borderColor: colors.cardBackground,
       elevation: 20,
       flexDirection: "row",
       alignItems: "center",
@@ -72,11 +72,9 @@ const styles = (colors: ThemeInterface) =>
       marginRight: 30,
     },
     nameText: {
-      color: colors.textColor,
       fontWeight: "500",
     },
     priceText: {
-      color: colors.textColor,
       fontWeight: "600",
     },
     nameContainer: {

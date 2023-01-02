@@ -4,13 +4,14 @@ export interface ThemeInterface {
   backgroundColor?: string;
   productShadowColor?: string;
   layerColor?: string;
+  cardBackground?: string;
   gray?: string;
   whiteColor?: string;
   textColor?: string;
   rejectColor?: string;
   acceptColor?: string;
   redColor?: string;
-  orangeColor?:string
+  orangeColor?: string;
 }
 
 export interface ColorsType {
@@ -24,7 +25,7 @@ const common: ThemeInterface = {
   rejectColor: "#e30202",
   acceptColor: "#08e800",
   redColor: "#FF0000",
-  orangeColor: '#fd8f00'
+  orangeColor: "#fd8f00",
 };
 
 const dark: ThemeInterface = {
@@ -33,6 +34,7 @@ const dark: ThemeInterface = {
   backgroundColor: "#151515",
   productShadowColor: "rgba(255,255,255,0.5)",
   layerColor: "rgba(255,255,255,0.8)",
+  cardBackground: "#343434",
   gray: "#888888",
   ...common,
 };
@@ -43,6 +45,7 @@ const light: ThemeInterface = {
   secondary: "#121212",
   productShadowColor: "rgba(0,0,0,0.5)",
   layerColor: "rgba(0,0,0,0.8)",
+  cardBackground: "#dddddd",
   gray: "#777777",
   ...common,
 };

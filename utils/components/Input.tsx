@@ -1,6 +1,8 @@
 import React, { useEffect, useReducer } from "react";
-import { Platform, StyleSheet, Text, TextInput, View } from "react-native";
+import { Platform, StyleSheet, TextInput, View } from "react-native";
 import { useAppSelector } from "../../hooks/redux";
+
+import Text from "./Text";
 
 import { ThemeInterface } from "../../assets/Colors";
 import { AnyAction } from "redux";

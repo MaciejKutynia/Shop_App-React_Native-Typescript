@@ -1,44 +1,24 @@
-import React, { useCallback, useEffect, useReducer } from "react";
-import { Pressable, StyleSheet, Text, View } from "react-native";
-import { useIntl, FormattedMessage } from "react-intl";
-import { useAppSelector, useAppDispatch } from "../../hooks/redux";
+import React, { useCallback, useEffect, useReducer, useState } from "react";
+import { Pressable, StyleSheet, View } from "react-native";
+import { useIntl } from "react-intl";
+import { useAppSelector, useAppDispatch } from "../../../hooks/redux";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { authenticateAsync } from "expo-local-authentication";
 
-import Input from "../../utils/components/Input";
+import Input from "../../../utils/components/Input";
+import Text from "../../../utils/components/Text";
 
-import globalStyles from "../../assets/styles/global";
+import globalStyles from "../../../assets/styles/global";
 
-import { signIn } from "../../redux/actions/Auth";
+import { biometricLogin, signIn } from "../../../redux/actions/Auth";
+import { loginReducer, reducerState } from "./useLogin";
 
-import { AnyAction } from "redux";
-import { ThemeInterface } from "../../assets/Colors";
-import { setLoading } from "../../redux/actions/Theme";
-import { LoginScreenProps } from "../../types/navigation/Auth";
-
-const loginReducer = (state: any, action: AnyAction) => {
-  switch (action.type) {
-    case "LOGIN_USER":
-      let formIsValid = true;
-      const values = {
-        ...state.values,
-        [action.input]: action.value,
-      };
-      const validities = {
-        ...state.validities,
-        [action.input]: action.isValid,
-      };
-      for (const key in validities) {
-        formIsValid = formIsValid && validities[key];
-      }
-      return {
-        ...state,
-        formIsValid,
-        values,
-        validities,
-      };
-    default:
-      return state;
-  }
-};
+import { ThemeInterface } from "../../../assets/Colors";
+import { setLoading } from "../../../redux/actions/Theme";
+import { LoginScreenProps } from "../../../types/navigation/Auth";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { AuthNavigationStackList } from "../../../types/navigation/Auth";
 
 const Login: React.FC<LoginScreenProps> = (props) => {
   const { navigation } = props;
@@ -46,19 +26,27 @@ const Login: React.FC<LoginScreenProps> = (props) => {
 
   const { formatMessage } = useIntl();
 
+  const [biometricIsAvailable, setBiometricIsAvailable] =
+    useState<boolean>(false);
+  const [biometricLoginToken, setBiometricLoginToken] = useState<string | null>(
+    null,
+  );
+
+  useEffect(() => {
+    (async () => {
+      const biometric = await AsyncStorage.getItem("biometric");
+      const biometricAllowed = biometric && JSON.parse(biometric);
+      const biometricToken = await AsyncStorage.getItem("biometricToken");
+      setBiometricLoginToken(biometricToken || null);
+      biometricAllowed && !!biometricToken
+        ? setBiometricIsAvailable(true)
+        : setBiometricIsAvailable(false);
+    })();
+  }, [AsyncStorage]);
+
   const colors: ThemeInterface = useAppSelector((state) => state.Theme.colors);
 
-  const [state, dispatch] = useReducer(loginReducer, {
-    values: {
-      email: "",
-      password: "",
-    },
-    validities: {
-      email: false,
-      password: false,
-    },
-    formIsValid: false,
-  });
+  const [state, dispatch] = useReducer(loginReducer, reducerState);
 
   const onChangeHandler = useCallback(
     (input: string, value: string, isValid: boolean) => {
@@ -73,12 +61,38 @@ const Login: React.FC<LoginScreenProps> = (props) => {
     await appDispatch(setLoading(false) as any);
   };
 
+  const biometricLoginHandler = async () => {
+    const data = await authenticateAsync();
+    const { success } = data;
+    if (success) {
+      appDispatch(biometricLogin(biometricLoginToken) as any);
+    }
+  };
+
+  if (biometricIsAvailable) {
+    return (
+      <View
+        style={{
+          ...styles(colors).registerContainer,
+          ...globalStyles(colors).screen,
+        }}>
+        <Pressable onPress={biometricLoginHandler}>
+          <MaterialCommunityIcons
+            name="face-recognition"
+            size={60}
+            color={colors.secondary}
+          />
+        </Pressable>
+      </View>
+    );
+  }
+
   return (
     <View
       style={{
         ...globalStyles(colors).form,
         justifyContent: "flex-start",
-        marginTop: 20,
+        paddingTop: 20,
       }}>
       <View style={{ marginBottom: 20 }}>
         <Text style={{ ...globalStyles(colors).formText }}>
@@ -161,7 +175,9 @@ const Login: React.FC<LoginScreenProps> = (props) => {
   );
 };
 
-export const loginOptions = (navData) => {
+export const loginOptions = (
+  _: NativeStackNavigationProp<AuthNavigationStackList, "Login", undefined>,
+) => {
   const { formatMessage } = useIntl();
   return {
     title: formatMessage({
@@ -176,7 +192,8 @@ const styles = (colors: ThemeInterface) =>
     registerContainer: {
       justifyContent: "center",
       alignItems: "center",
-      marginTop: 10,
+      paddingTop: 10,
+      backgroundColor: colors.backgroundColor,
     },
   });
 

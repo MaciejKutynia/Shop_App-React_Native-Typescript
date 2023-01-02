@@ -4,13 +4,14 @@ import {
   Pressable,
   StyleSheet,
   ScrollView,
-  Text,
   TouchableOpacity,
   View,
 } from "react-native";
 import { Badge } from "react-native-paper";
-import { useAppSelector } from "../../../hooks/redux";
+import { useAppSelector, useAppDispatch } from "../../../hooks/redux";
 import { useIntl } from "react-intl";
+
+import Text from "../../../utils/components/Text";
 
 import { ThemeInterface } from "../../../assets/Colors";
 
@@ -18,8 +19,10 @@ import PRODUCTS from "../../../assets/dummy-data/PRODUCTS";
 import { ProductType } from "../../../assets/dummy-data/Product_Model";
 import globalStyles from "../../../assets/styles/global";
 import { activeOpacity } from "../../../utils";
+import { HIDE_MESSAGE, SHOW_MESSAGE } from "../../../redux/constants/Message";
 
 const ProductScreen = (props: any) => {
+  const dispatch = useAppDispatch();
   const { formatMessage } = useIntl();
   const { navigation, route } = props;
   const { id } = route.params;
@@ -35,11 +38,19 @@ const ProductScreen = (props: any) => {
     (state) => state.Theme.currencyRatio,
   );
 
+  const token = useAppSelector((state) => state.Auth.token);
+
+  const order = useAppSelector((state) => state.Cart.order);
+
   useEffect(() => {
     navigation.setOptions({
       headerTitle: selectedProduct?.name,
     });
   }, [selectedProduct]);
+
+  const addToCartHandler = () => {
+    console.log(order);
+  };
 
   return (
     <View
@@ -94,8 +105,7 @@ const ProductScreen = (props: any) => {
         </View>
       </ScrollView>
       <View style={cartBar(colors).cartActionsContainer}>
-        {/* TODO: Add onPress handler */}
-        <Pressable style={cartBar(colors).button}>
+        <Pressable style={cartBar(colors).button} onPress={addToCartHandler}>
           <Text style={cartBar(colors).buttonText}>
             {formatMessage({
               id: "Add to cart",

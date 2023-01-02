@@ -1,21 +1,16 @@
 import React, { useCallback, useEffect, useReducer } from "react";
-import {
-  KeyboardAvoidingView,
-  Platform,
-  StyleSheet,
-  Text,
-  View,
-} from "react-native";
-import { useAppSelector } from "../../hooks/redux";
+import { KeyboardAvoidingView, Platform, StyleSheet, View } from "react-native";
+import { useAppSelector } from "../../../hooks/redux";
 import { useIntl } from "react-intl";
 
-import globalStyles from "../../assets/styles/global";
+import globalStyles from "../../../assets/styles/global";
 
-import Input from "../../utils/components/Input";
+import Input from "../../../utils/components/Input";
+import Text from "../../../utils/components/Text";
 
-import { ThemeInterface } from "../../assets/Colors";
+import { ThemeInterface } from "../../../assets/Colors";
 import { AnyAction } from "redux";
-import { RegisterScreenProps } from "../../types/navigation/Auth";
+import { RegisterScreenProps } from "../../../types/navigation/Auth";
 
 const registerReducer = (state: any, action: AnyAction) => {
   switch (action.type) {

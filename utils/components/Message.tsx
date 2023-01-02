@@ -1,11 +1,13 @@
-import React, { useEffect } from "react";
-import { Dimensions, Pressable, StyleSheet, Text, View } from "react-native";
+import React, { useEffect, useState } from "react";
+import { Dimensions, Pressable, StyleSheet, View } from "react-native";
 import { useAppSelector, useAppDispatch } from "../../hooks/redux";
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
   withSpring,
 } from "react-native-reanimated";
+
+import Text from "./Text";
 
 import globalStyles from "../../assets/styles/global";
 
@@ -32,9 +34,10 @@ const Message: React.FC = () => {
     (state) => state.Message.cancelButtonHandler,
   );
   const timer = useAppSelector((state) => state.Message.timer);
+  const isHideByTimer = useAppSelector((state) => state.Message.isHideByTimer);
 
   useEffect(() => {
-    if (isVisible) {
+    if (isVisible && !isHideByTimer) {
       setTimeout(() => {
         dispatch({ type: HIDE_MESSAGE });
       }, timer);
@@ -65,24 +68,27 @@ const Message: React.FC = () => {
         style={[styles(colors).container, animatedStyles]}
         pointerEvents={isVisible ? "auto" : "none"}>
         <View style={styles(colors).textContainer}>
-          <View style={styles(colors).icon}>
-            {isError ? (
-              <MaterialIcons
-                name="error-outline"
-                size={24}
-                color={colors.redColor}
-              />
-            ) : (
-              <AntDesign
-                name="checkcircleo"
-                size={24}
-                color={colors.acceptColor}
-              />
-            )}
-          </View>
+          {msg ? (
+            <View style={styles(colors).icon}>
+              {isError ? (
+                <MaterialIcons
+                  name="error-outline"
+                  size={24}
+                  color={colors.redColor}
+                />
+              ) : (
+                <AntDesign
+                  name="checkcircleo"
+                  size={24}
+                  color={colors.acceptColor}
+                />
+              )}
+            </View>
+          ) : null}
+
           <Text>{msg}</Text>
         </View>
-        <View style={styles(colors).textContainer}>
+        <View style={styles(colors).buttons}>
           {okText ? (
             <Pressable
               style={globalStyles(colors).button}
@@ -125,11 +131,16 @@ const styles = (colors: ThemeInterface) =>
       left: "50%",
       transform: [
         { translateY: -1 * (Dimensions.get("window").height / 5) },
-        { translateX: -1 * (Dimensions.get("window").width / 3) },
+        {
+          translateX:
+            -1 *
+            (Dimensions.get("window").width / 2 -
+              Dimensions.get("window").width / 10),
+        },
       ],
       backgroundColor: colors.primary,
-      width: "70%",
-      height: "25%",
+      width: "80%",
+      minHeight: "25%",
       borderRadius: 10,
       padding: 15,
       zIndex: 3,
@@ -138,8 +149,16 @@ const styles = (colors: ThemeInterface) =>
       opacity: 0,
     },
     textContainer: {
+      paddingTop: 20,
       flexDirection: "row",
       alignItems: "center",
+    },
+    buttons: {
+      paddingTop: 20,
+      flexDirection: "row",
+      alignItems: "center",
+      flexWrap: "wrap",
+      justifyContent: "center",
     },
     icon: {
       marginRight: 5,

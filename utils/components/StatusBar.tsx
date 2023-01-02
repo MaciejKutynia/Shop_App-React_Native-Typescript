@@ -9,11 +9,12 @@ const MyStatusBar = () => {
   const colors = useAppSelector((state) => state.Theme.colors);
   const theme = useAppSelector((state) => state.Theme.theme);
   return (
-    <View style={[styles.statusBar, { backgroundColor: colors.primary }]}>
+    <View
+      style={[styles.statusBar, { backgroundColor: colors.backgroundColor }]}>
       <SafeAreaView>
         <StatusBar
           translucent
-          backgroundColor={colors.primary}
+          backgroundColor={colors.backgroundColor}
           barStyle={theme === "dark" ? "light-content" : "dark-content"}
         />
       </SafeAreaView>

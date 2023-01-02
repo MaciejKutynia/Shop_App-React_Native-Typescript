@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { StyleSheet, Switch, Text, View } from "react-native";
+import { StyleSheet, Switch, View } from "react-native";
 import { ThemeInterface } from "../../assets/Colors";
 import { useAppSelector } from "../../hooks/redux";
+
+import Text from "./Text";
 
 import { SwitchTypes } from "../../types/utils/Switch";
 

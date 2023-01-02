@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, View } from "react-native";
 import globalStyles from "../../assets/styles/global";
 import { useAppSelector, useAppDispatch } from "../../hooks/redux";
 import { useIntl } from "react-intl";
 import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-import SwitchComponent from "../../utils/components/Switch";
+import Switch from "../../utils/components/Switch";
+import Text from "../../utils/components/Text";
 
 import { ThemeInterface } from "../../assets/Colors";
 import { getTheme } from "../../redux/actions/Theme";
@@ -65,7 +66,7 @@ const SettingsScreen = () => {
         </Text>
       </View>
       <View style={styles(colors).settingsContainer}>
-        <SwitchComponent
+        <Switch
           icon={
             <Ionicons
               name="moon"
@@ -82,7 +83,7 @@ const SettingsScreen = () => {
           onChangeHandler={toggleSwitch}
           initial={isDark}
         />
-        <SwitchComponent
+        <Switch
           initial={biometric}
           icon={
             <Ionicons
@@ -99,7 +100,7 @@ const SettingsScreen = () => {
           })}
           onChangeHandler={toggleSwitch}
         />
-        <SwitchComponent
+        <Switch
           initial={notifications}
           icon={
             <MaterialCommunityIcons

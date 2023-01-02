@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { Provider } from "react-redux";
 import { useAppDispatch, useAppSelector } from "./hooks/redux";
 import * as Localization from "expo-localization";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import "react-native-gesture-handler";
 import {
   ActivityIndicator,
   SafeAreaView,
@@ -12,7 +12,7 @@ import {
 import { IntlProvider } from "react-intl";
 
 import AppNavigator from "./navigation/AppNavigator";
-import StatusBar from "./components/StatusBar";
+import StatusBar from "./utils/components/StatusBar";
 import Message from "./utils/components/Message";
 
 import store from "./redux";
@@ -23,6 +23,8 @@ import {
   setLoading,
 } from "./redux/actions/Theme";
 import globalStyles from "./assets/styles/global";
+import { ThemeInterface } from "./assets/Colors";
+import { tryAutoLogin } from "./redux/actions/Auth";
 
 const ShopApp: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -46,6 +48,7 @@ const ShopApp: React.FC = () => {
 
   useEffect(() => {
     (async () => {
+      await dispatch(tryAutoLogin() as any);
       await dispatch(getLocale() as any);
       await dispatch(getTheme() as any);
     })();
@@ -61,21 +64,23 @@ const ShopApp: React.FC = () => {
 
   return (
     <IntlProvider locale={locale} defaultLocale="pl" messages={messages}>
-      <View style={appStyles.screen}>
+      <View style={appStyles(colors).screen}>
         <Message />
         <StatusBar />
         <AppNavigator />
       </View>
-      <SafeAreaView style={{ backgroundColor: colors.primary }} />
+      <SafeAreaView style={{ backgroundColor: colors.backgroundColor }} />
     </IntlProvider>
   );
 };
 
-const appStyles = StyleSheet.create({
-  screen: {
-    flex: 1,
-  },
-});
+const appStyles = (colors: ThemeInterface) =>
+  StyleSheet.create({
+    screen: {
+      flex: 1,
+      backgroundColor: colors.backgroundColor,
+    },
+  });
 
 const App: React.FC = () => {
   return (

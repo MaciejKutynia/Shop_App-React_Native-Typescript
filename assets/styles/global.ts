@@ -13,6 +13,7 @@ const globalStyles = (colors: ThemeInterface) =>
       flex: 1,
       justifyContent: "center",
       alignItems: "center",
+      backgroundColor: colors.backgroundColor,
     },
     formText: {
       marginBottom: 30,

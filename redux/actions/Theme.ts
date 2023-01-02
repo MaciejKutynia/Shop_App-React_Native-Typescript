@@ -36,7 +36,7 @@ export const changeLanguage =
   () => async (dispatch: Dispatch, getState: () => StoreInitialState) => {
     const locale = getState().Theme.locale;
     try {
-      const res = await axios.post(`${backendURL}/settings/language`, {
+      const res = await axios.post(`${backendURL}/api/settings/language`, {
         locale,
       });
       return res?.data;

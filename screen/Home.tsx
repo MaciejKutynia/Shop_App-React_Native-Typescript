@@ -1,13 +1,6 @@
 import React from "react";
 import { useAppSelector } from "../hooks/redux";
-import {
-  ActivityIndicator,
-  Button,
-  FlatList,
-  StyleSheet,
-  Text,
-  View,
-} from "react-native";
+import { FlatList, View } from "react-native";
 
 import globalStyles from "../assets/styles/global";
 

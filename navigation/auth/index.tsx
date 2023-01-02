@@ -1,7 +1,7 @@
 import React from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import Login, { loginOptions } from "../../screen/auth/Login";
-import Register from "../../screen/auth/Register";
+import Login, { loginOptions } from "../../screen/auth/Login/Login";
+import Register from "../../screen/auth/Register/Register";
 import {
   AuthNavigationInterface,
   AuthNavigationStackList,
